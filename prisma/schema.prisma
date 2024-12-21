@@ -10,6 +10,7 @@ datasource db {
 model Usuario {
   id        Int      @id @default(autoincrement())
   email     String   @unique
+  usuario    String   @db.VarChar(50)
   password  String   @db.VarChar(255) // Encriptado
   nombre    String   @db.VarChar(50)
   apellido  String   @db.VarChar(50)
