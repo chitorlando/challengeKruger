@@ -20,7 +20,7 @@ ORM: Prisma
 
 Base de datos: PostgreSQL (implementada en Neon para facilitar la gestión remota)
 
-Mapas: Leaflet (para visualización de polígonos y coordenadas)
+Mapas: Leaflet o Visgl Map (para visualización de polígonos y coordenadas)
 
 Autenticación: NextAuth
 
@@ -28,6 +28,4 @@ Validaciones: Zod
 
 Documentación: Swagger con swagger-jsdoc
 
-Estilo:
-
-MUI
+Estilos: MUI - css
