@@ -3,6 +3,7 @@
 import { Box, Button, CardMedia, IconButton, InputAdornment, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { signIn } from 'next-auth/react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
@@ -22,16 +23,30 @@ const LoginPage = () => {
         event.preventDefault();
     };
 
+    //! aqui copiar el handle para nuevos usuarios
+    // const onSubmit = handleSubmit(async (data) => {
+    //     const res = await fetch('/api/clients/register', {
+    //         method: 'POST',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //     const resJSON = await res.json()
+    //     console.log(resJSON);
+    // })
+
     const onSubmit = handleSubmit(async (data) => {
-        const res = await fetch('/api/auth/register', {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        const res = await signIn('credentials', {
+            redirect: false,
+            username: data.username,
+            password: data.passwd
         })
-        const resJSON = await res.json()
-        console.log(resJSON);
+        if (res?.error) {
+            alert(res.error);
+        } else {
+            console.log('esa es ya te mando al dashboard');
+        }
     })
 
     return (
