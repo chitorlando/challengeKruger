@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { signIn } from 'next-auth/react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useRouter } from 'next/navigation';
 
 const LoginPage = () => {
 
@@ -14,6 +15,8 @@ const LoginPage = () => {
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
     const { register, handleSubmit } = useForm();
+
+    const router = useRouter();
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -40,12 +43,23 @@ const LoginPage = () => {
         const res = await signIn('credentials', {
             redirect: false,
             username: data.username,
-            password: data.passwd
+            password: data.passwd,
         })
         if (res?.error) {
             alert(res.error);
         } else {
-            console.log('esa es ya te mando al dashboard');
+            const session = await fetch('/api/auth/session').then(res => res.json());
+            console.log(session);
+
+            const role = session?.user?.role;
+
+            if (role === 'ADMINISTRADOR') {
+                router.push('/admin/dashboard'); // Ruta del administrador
+            } else if (role === 'CLIENTE') {
+                router.push('/cliente/dashboard'); // Ruta del cliente
+            } else {
+                alert('Rol desconocido.');
+            }
         }
     })
 

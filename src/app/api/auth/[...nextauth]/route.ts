@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import NextAuth from "next-auth"
 //nextaAuth con usuario y contraseña
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -22,23 +21,38 @@ const authOptions = {
                     }
                 })
 
+                if (!credentials) throw new Error('No hay credenciales');
+                
                 if(!userFound) throw new Error('Usuario no encontrado');
 
-             console.log(userFound);
-
-                if (!credentials) throw new Error('no hay credenciales');
                 const matchPass = await bcrypt.compare(credentials.password, userFound?.password)
                 if(!matchPass) throw new Error('contra incorrecta');
 
                 return {
                     id: userFound.id.toString(),
                     name: userFound.nombre,
-                    email: userFound.email
+                    email: userFound.email,
+                    role: userFound.rol,
                 }
                 
             }
         })
-    ]};
+    ],
+    callbacks: {
+        async session({ session, token }) {
+            session.user.role = token.role; // Añadir el rol a la sesión
+            return session;
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                token.role = user.role; // Incluir el rol en el token
+            }
+            return token;
+        }
+    },
+
+    secret: process.env.NEXTAUTH_SECRET,
+};
 
 const handler = NextAuth(authOptions);
 
