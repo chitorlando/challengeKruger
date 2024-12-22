@@ -5,16 +5,16 @@ import { VerifyAccess } from '@/components/VerifyAccess';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react'
+import { Session } from 'next-auth'
 
 const AdminDashboardPage = () => {
 
-    const { data: session, status } = useSession();
+    const { data: session, status } = useSession() as { data: Session & { user: { role: string } } | null, status: string };
+
     const router = useRouter();
 
     useEffect(() => {
         if (status === 'loading') return; // Esperar la carga de la sesión
-
-        console.log(session);
 
         if (!session) router.push('/auth/login'); // Redirigir a login si no hay sesión
 
@@ -23,7 +23,6 @@ const AdminDashboardPage = () => {
     }, [session, status, router]);
 
     if (status === 'loading' || !session) return <VerifyAccess />;
-
 
     return <AdminDashboard />
 

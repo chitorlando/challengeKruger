@@ -1,6 +1,6 @@
 import { getToken } from 'next-auth/jwt';
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
@@ -8,8 +8,7 @@ export async function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
 
     if (!token) {
-        if (pathname === '/auth/login') return; // Permitir el acceso a la página de login
-        return new Response('No autorizado', { status: 401 });
+        return NextResponse.redirect(new URL('/auth/login', req.url));
     }
 
     if (pathname.startsWith('/admin') && token.role !== 'ADMINISTRADOR') {

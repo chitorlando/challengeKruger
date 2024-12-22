@@ -1,9 +1,10 @@
 'use client'
 
-import { Box, Button, CardMedia, IconButton, InputAdornment, TextField, Typography } from '@mui/material'
+import { Alert, Box, Button, CardMedia, IconButton, InputAdornment, TextField, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { signIn, useSession } from 'next-auth/react'
+import { Session } from 'next-auth'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useRouter } from 'next/navigation';
@@ -11,7 +12,7 @@ import { VerifyAccess } from '@/components/VerifyAccess'
 
 const LoginPage = () => {
 
-    const { data: session, status } = useSession();
+    const { data: session, status } = useSession() as { data: Session & { user: { role: string } } | null, status: string };
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -21,11 +22,14 @@ const LoginPage = () => {
 
     const router = useRouter();
 
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
     // Redirigir por sesion
     useEffect(() => {
         if (status === 'loading') return; // Esperar a que la sesión se cargue
 
         if (session) {
+
             if (session.user!.role === 'ADMINISTRADOR') {
                 router.push('/admin/dashboard'); // Redirigir al panel de administrador
             } else if (session.user!.role === 'CLIENTE') {
@@ -62,10 +66,10 @@ const LoginPage = () => {
             password: data.passwd,
         })
         if (res?.error) {
-            alert(res.error);
+            setErrorMessage(res.error);
         } else {
+            setErrorMessage(null);
             const session = await fetch('/api/auth/session').then(res => res.json());
-            console.log(session);
 
             const role = session?.user?.role;
 
@@ -74,7 +78,7 @@ const LoginPage = () => {
             } else if (role === 'CLIENTE') {
                 router.push('/cliente/dashboard'); // Ruta del cliente
             } else {
-                alert('Rol desconocido.');
+                setErrorMessage('Rol desconocido');
             }
         }
     })
@@ -181,6 +185,21 @@ const LoginPage = () => {
 
                     </Box>
                 </Box>
+
+                {errorMessage && (
+                    <Alert
+                        sx={{
+                            position: 'fixed',
+                            top: '1rem',
+                            right: '1rem',
+                        }}
+                        severity="warning"
+                        variant="filled"
+                        onClose={() => setErrorMessage(null)}
+                    >
+                        {errorMessage}
+                    </Alert>
+                )}
 
             </Box>
         </Box>

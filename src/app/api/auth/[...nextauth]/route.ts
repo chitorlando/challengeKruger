@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import NextAuth from "next-auth"
 //nextaAuth con usuario y contraseña
 import CredentialsProvider from "next-auth/providers/credentials"
@@ -26,7 +27,7 @@ const authOptions = {
                 if(!userFound) throw new Error('Usuario no encontrado');
 
                 const matchPass = await bcrypt.compare(credentials.password, userFound?.password)
-                if(!matchPass) throw new Error('contra incorrecta');
+                if(!matchPass) throw new Error('Contraseña incorrecta');
 
                 return {
                     id: userFound.id.toString(),
@@ -49,7 +50,7 @@ const authOptions = {
             }
             return token;
         }
-    },
+    },    
 
     secret: process.env.NEXTAUTH_SECRET,
 };
