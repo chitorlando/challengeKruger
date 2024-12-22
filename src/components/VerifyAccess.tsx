@@ -36,7 +36,7 @@ export const VerifyAccess = () => {
                 </Typography>
 
                 <Typography>
-                    Te busco en la lista, verificando acceso....
+                    Comprobando acceso....
                 </Typography>
 
             </Box>

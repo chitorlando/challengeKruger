@@ -1,14 +1,17 @@
 'use client'
 
 import { Box, Button, CardMedia, IconButton, InputAdornment, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useRouter } from 'next/navigation';
+import { VerifyAccess } from '@/components/VerifyAccess'
 
 const LoginPage = () => {
+
+    const { data: session, status } = useSession();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -17,6 +20,19 @@ const LoginPage = () => {
     const { register, handleSubmit } = useForm();
 
     const router = useRouter();
+
+    // Redirigir por sesion
+    useEffect(() => {
+        if (status === 'loading') return; // Esperar a que la sesión se cargue
+
+        if (session) {
+            if (session.user!.role === 'ADMINISTRADOR') {
+                router.push('/admin/dashboard'); // Redirigir al panel de administrador
+            } else if (session.user!.role === 'CLIENTE') {
+                router.push('/cliente/dashboard'); // Redirigir al panel de cliente
+            }
+        }
+    }, [session, status, router]);
 
     const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
@@ -62,6 +78,8 @@ const LoginPage = () => {
             }
         }
     })
+
+    if (status === 'loading') return <VerifyAccess />;
 
     return (
         <Box sx={{

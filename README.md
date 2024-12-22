@@ -24,8 +24,6 @@ Mapas: Leaflet o Visgl Map (para visualización de polígonos y coordenadas)
 
 Autenticación: NextAuth
 
-Validaciones: Zod
-
 Documentación: Swagger con swagger-jsdoc
 
 Estilos: MUI - css
