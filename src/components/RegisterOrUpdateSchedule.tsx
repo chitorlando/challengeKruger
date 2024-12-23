@@ -1,10 +1,10 @@
 'use client'
 
 import { Box, Grid2, TextField, InputLabel, Button, Alert } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import MapPoligonComponent from './MapPoligonComponent';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export const RegisterOrUpdateSchedule = () => {
 
@@ -16,16 +16,51 @@ export const RegisterOrUpdateSchedule = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [clearMarkers, setClearMarkers] = useState<boolean>(false);
 
-    const onSubmit = handleSubmit(async (data) => {
+    const searchParams = useSearchParams();
+    const scheduleId = searchParams.get('id');
+    const [isLoading, setIsLoading] = useState(false);
 
+    // const onSubmit = handleSubmit(async (data) => {
+
+    //     if (!poligono) {
+    //         setErrorMessage('Debe delimitar el sector con al menos 3 marcadores en el mapa.');
+    //         return;
+    //     }
+
+    //     try {
+    //         const response = await fetch('/api/schedules/register', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(data),
+    //         });
+
+    //         const result = await response.json();
+
+    //         if (!response.ok) {
+    //             setErrorMessage(result.message || 'Error al registrar el horario.');
+    //             return;
+    //         }
+
+    //         setErrorMessage('Horario registrado exitosamente.');
+    //         // Redirigir o limpiar el formulario según lo necesario
+    //         router.push('/admin/dashboard');
+    //     } catch (error) {
+    //         console.error('Error al enviar los datos:', error);
+    //         setErrorMessage('Error interno del servidor. Inténtelo nuevamente más tarde.');
+    //     }
+    // });
+
+    const onSubmit = handleSubmit(async (data) => {
         if (!poligono) {
             setErrorMessage('Debe delimitar el sector con al menos 3 marcadores en el mapa.');
             return;
         }
 
         try {
-            const response = await fetch('/api/schedules/register', {
-                method: 'POST',
+            const response = await fetch(scheduleId ? `/api/schedules/${scheduleId}` : '/api/schedules/register', {
+                method: scheduleId ? 'PUT' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -35,18 +70,43 @@ export const RegisterOrUpdateSchedule = () => {
             const result = await response.json();
 
             if (!response.ok) {
-                setErrorMessage(result.message || 'Error al registrar el horario.');
+                setErrorMessage(result.message || 'Error al procesar el horario.');
                 return;
             }
 
-            setErrorMessage('Horario registrado exitosamente.');
-            // Redirigir o limpiar el formulario según lo necesario
+            setErrorMessage(`Horario ${scheduleId ? 'actualizado' : 'registrado'} exitosamente.`);
+
             router.push('/admin/dashboard');
         } catch (error) {
             console.error('Error al enviar los datos:', error);
             setErrorMessage('Error interno del servidor. Inténtelo nuevamente más tarde.');
         }
     });
+
+    // Cargar los datos del horario si existe un ID
+    useEffect(() => {
+        if (scheduleId) {
+            setIsLoading(true);
+            fetch(`/api/schedules/${scheduleId}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setValue('nombreSector', data.nombreSector);
+                    setValue('horaInicio', data.horaInicio);
+                    setValue('horaFin', data.horaFin);
+                    setValue('poligono', data.poligono);
+                    setPoligono(data.poligono);
+                })
+                .catch((error) => {
+                    console.error('Error al cargar los datos del horario:', error);
+                    setErrorMessage('Error al cargar los datos del horario.');
+                })
+                .finally(() => setIsLoading(false));
+        }
+    }, [scheduleId, setValue]);
+
+    if (isLoading) {
+        return <div>Cargando datos...</div>;
+    }
 
     return (
         <Box sx={{
@@ -173,8 +233,7 @@ export const RegisterOrUpdateSchedule = () => {
                             bgcolor: '#fd5c04',
                             my: '2rem'
                         }}>
-                        {/* {clientId ? 'Actualizar' : 'Insertar'} */}
-                        Insertar
+                        {scheduleId ? 'Actualizar' : 'Insertar'}
                     </Button>
 
                     <Button
