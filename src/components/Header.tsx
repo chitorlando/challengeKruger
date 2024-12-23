@@ -1,11 +1,14 @@
 'use client'
 import { Box, Button, CardMedia, Link, Typography } from "@mui/material"
-
+import { useSession } from "next-auth/react";
 
 import { useEffect, useState } from "react"
 
+export const Header = () => {
 
-export const Header = ({ title }: { title: string }) => {
+    const name = useSession().data?.user?.name;
+
+    const title = `Bienvenido ${name}`;
 
     const [scroll, setScroll] = useState(false);
 

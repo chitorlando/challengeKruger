@@ -29,6 +29,8 @@ const authOptions = {
                 const matchPass = await bcrypt.compare(credentials.password, userFound?.password)
                 if(!matchPass) throw new Error('Contraseña incorrecta');
 
+                console.log(userFound);
+
                 return {
                     id: userFound.id.toString(),
                     name: userFound.nombre,
@@ -41,17 +43,18 @@ const authOptions = {
     ],
     callbacks: {
         async session({ session, token }) {
-            session.user.role = token.role; // Añadir el rol a la sesión
+            if (token) {
+                session.user.role = token.role || null; // Asegúrate de asignar un valor por defecto
+            }
             return session;
         },
         async jwt({ token, user }) {
             if (user) {
-                token.role = user.role; // Incluir el rol en el token
+                token.role = user.role || null; // Incluye valores por defecto si es necesario
             }
             return token;
         }
-    },    
-
+    },
     secret: process.env.NEXTAUTH_SECRET,
 };
 
