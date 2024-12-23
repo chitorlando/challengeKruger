@@ -1,4 +1,4 @@
-import { RegisterClient } from '@/components/RegisterClient'
+import { RegisterOrUpdateClient } from '@/components/RegisterOrUpdateClient'
 import { Box } from '@mui/material'
 import React from 'react'
 
@@ -8,7 +8,7 @@ const RegisterClientPage = () => {
             mt: '4rem',
             px: '15rem'
         }}>
-            <RegisterClient />
+            <RegisterOrUpdateClient />
         </Box>
     )
 }

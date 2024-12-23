@@ -20,6 +20,7 @@ import {
 import { Edit, Delete } from '@mui/icons-material';
 
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Client {
     id: number;
@@ -54,6 +55,7 @@ export const ClientsTable = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [open, setOpen] = useState(false);
     const [clientToDelete, setClientToDelete] = useState<number | null>(null);
+    const router = useRouter();
 
 
     useEffect(() => {
@@ -80,8 +82,7 @@ export const ClientsTable = () => {
     };
 
     const handleEdit = (id: number) => {
-        console.log(`Editar cliente con ID: ${id}`);
-        // Aquí iría la lógica para editar el cliente
+        router.push(`/admin/register-client?id=${id}`);
     };
 
     const handleDelete = async () => {
@@ -155,7 +156,7 @@ export const ClientsTable = () => {
                                                         sx={{
                                                             display: 'flex',
                                                             justifyContent: 'center',
-                                                            gap: 1, // Espacio entre los botones
+                                                            gap: 1,
                                                         }}
                                                     >
                                                         <IconButton
