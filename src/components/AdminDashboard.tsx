@@ -1,6 +1,7 @@
 import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 import { ClientsTable } from './ClientsTable'
+import { ScheduleTable } from './ScheduleTable'
 
 export const AdminDashboard = () => {
 
@@ -38,7 +39,7 @@ export const AdminDashboard = () => {
                     <Typography sx={{ my: '2rem' }} textAlign="center">
                         Lista de Horarios
                     </Typography>
-                    <ClientsTable />
+                    <ScheduleTable />
                 </Box>
 
                 {/* Tabla de clientes */}
