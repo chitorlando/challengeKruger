@@ -8,7 +8,9 @@ import { sendEmail } from '@/libs/emailService';
 
 export const RegisterOrUpdateClient = () => {
 
-    const { register, handleSubmit, setValue } = useForm();
+    const { register, handleSubmit, setValue,
+        formState: { errors },
+    } = useForm();
     const router = useRouter();
     const searchParams = useSearchParams();
     const clientId = searchParams.get('id');
@@ -44,8 +46,6 @@ export const RegisterOrUpdateClient = () => {
                     setErrorMessage('Error al cargar los datos del cliente.');
                 })
                 .finally(() => setIsLoading(false));
-        } else {
-            setErrorMessage('ID de cliente no válido.');
         }
     }, [clientId, setValue]);
 
@@ -187,6 +187,7 @@ export const RegisterOrUpdateClient = () => {
                             color="warning"
                             placeholder="johndoe@email.com"
                             variant="outlined"
+                            type='email'
                             fullWidth
                             required
                             {...register('email', { required: true })}
@@ -202,7 +203,20 @@ export const RegisterOrUpdateClient = () => {
                             variant="outlined"
                             fullWidth
                             required
-                            {...register('cedula', { required: true })}
+                            {...register('cedula', {
+                                required: 'La cédula es obligatoria',
+                                pattern: {
+                                    value: /^[0-9]{10}$/,
+                                    message: 'La cédula debe contener exactamente 10 números',
+                                },
+                            })}
+                            error={!!errors.cedula}
+                            helperText={errors.cedula?.message?.toString()}
+                            slotProps={{
+                                input: {
+                                    inputMode: 'numeric',
+                                },
+                            }}
                         />
                     </Grid2>
 
@@ -235,6 +249,7 @@ export const RegisterOrUpdateClient = () => {
                     display: 'flex',
                     justifyContent: 'space-around'
                 }}>
+
                     <Button
                         variant='contained'
                         type='submit'
@@ -244,6 +259,7 @@ export const RegisterOrUpdateClient = () => {
                         }}>
                         {clientId ? 'Actualizar' : 'Insertar'}
                     </Button>
+
                     <Button
                         variant='contained'
                         href='/admin/dashboard'
@@ -253,6 +269,7 @@ export const RegisterOrUpdateClient = () => {
                         }}>
                         Cancelar
                     </Button>
+
                 </Box>
 
                 {

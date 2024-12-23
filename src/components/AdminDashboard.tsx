@@ -14,7 +14,7 @@ export const AdminDashboard = () => {
                 justifyContent: 'space-around'
             }}>
 
-                <Button variant='contained' color='warning'>Nuevo Horario</Button>
+                <Button variant='contained' color='warning' href='/admin/register-schedule'>Nuevo Horario</Button>
                 <Button variant='contained' color='warning' href='/admin/register-client'>Nuevo Cliente</Button>
 
             </Box>

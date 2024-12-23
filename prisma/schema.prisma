@@ -10,35 +10,31 @@ datasource db {
 model Usuario {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  usuario    String   @db.VarChar(50)
-  password  String   @db.VarChar(255) // Encriptado
+  password  String   @db.VarChar(255)
   nombre    String   @db.VarChar(50)
   apellido  String   @db.VarChar(50)
-  rol       String    @default("CLIENTE")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  rol       String   @default("CLIENTE")
+  usuario   String   @db.VarChar(50)
   Cliente   Cliente?
 }
 
 model Cliente {
-  id          Int       @id @default(autoincrement())
-  cedula      String    @unique @db.VarChar(10)
-  coordenadas String    @db.VarChar(50)
-  usuarioId   Int       @unique
-  usuario     Usuario   @relation(fields: [usuarioId], references: [id])
-  horarios    Horario[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id          Int      @id @default(autoincrement())
+  cedula      String   @unique @db.VarChar(10)
+  coordenadas String   @db.VarChar(50)
+  usuarioId   Int      @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
 }
-
 model Horario {
   id           Int      @id @default(autoincrement())
   nombreSector String   @db.VarChar(100)
-  horaInicio   String   @db.VarChar(5)
-  horaFin      String   @db.VarChar(5)
-  poligono     String
-  clienteId    Int
-  cliente      Cliente  @relation(fields: [clienteId], references: [id])
+  horaInicio   String   @db.VarChar(10)
+  horaFin      String   @db.VarChar(10)
+  poligono     String   @db.Text
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
