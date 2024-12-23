@@ -1,80 +1,74 @@
-import { Box, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material';
-import React, { useState } from 'react'
+
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    IconButton,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TablePagination,
+    TableRow,
+} from '@mui/material';
+
+import { Edit, Delete } from '@mui/icons-material';
+
+import React, { useEffect, useState } from 'react';
+
+interface Client {
+    id: number;
+    cedula: string;
+    coordenadas: string;
+    usuarioId: number;
+    nombre: string;
+    apellido: string;
+    email: string;
+}
 
 interface Column {
-    id: 'name' | 'code' | 'population' | 'size' | 'density';
+    id: keyof Client | 'actions';
     label: string;
     minWidth?: number;
-    align?: 'right';
-    format?: (value: number) => string;
+    align?: 'center' | 'right' | 'left';
 }
 
 const columns: readonly Column[] = [
-    { id: 'name', label: 'Name', minWidth: 170 },
-    { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-    {
-        id: 'population',
-        label: 'Population',
-        minWidth: 170,
-        align: 'right',
-        format: (value: number) => value.toLocaleString('en-US'),
-    },
-    {
-        id: 'size',
-        label: 'Size\u00a0(km\u00b2)',
-        minWidth: 170,
-        align: 'right',
-        format: (value: number) => value.toLocaleString('en-US'),
-    },
-    {
-        id: 'density',
-        label: 'Density',
-        minWidth: 170,
-        align: 'right',
-        format: (value: number) => value.toFixed(2),
-    },
-];
-
-interface Data {
-    name: string;
-    code: string;
-    population: number;
-    size: number;
-    density: number;
-}
-
-function createData(
-    name: string,
-    code: string,
-    population: number,
-    size: number,
-): Data {
-    const density = population / size;
-    return { name, code, population, size, density };
-}
-
-const rows = [
-    createData('India', 'IN', 1324171354, 3287263),
-    createData('China', 'CN', 1403500365, 9596961),
-    createData('Italy', 'IT', 60483973, 301340),
-    createData('United States', 'US', 327167434, 9833520),
-    createData('Canada', 'CA', 37602103, 9984670),
-    createData('Australia', 'AU', 25475400, 7692024),
-    createData('Germany', 'DE', 83019200, 357578),
-    createData('Ireland', 'IE', 4857000, 70273),
-    createData('Mexico', 'MX', 126577691, 1972550),
-    createData('Japan', 'JP', 126317000, 377973),
-    createData('France', 'FR', 67022000, 640679),
-    createData('United Kingdom', 'GB', 67545757, 242495),
-    createData('Russia', 'RU', 146793744, 17098246),
-    createData('Nigeria', 'NG', 200962417, 923768),
-    createData('Brazil', 'BR', 210147125, 8515767),
+    { id: 'actions', label: 'Acciones', align: 'center' },
+    { id: 'nombre', label: 'Nombre', minWidth: 170 },
+    { id: 'apellido', label: 'Apellido', minWidth: 170 },
+    { id: 'email', label: 'Correo Electrónico', minWidth: 200 },
+    { id: 'cedula', label: 'Cédula', minWidth: 150 },
+    { id: 'coordenadas', label: 'Coordenadas', minWidth: 200 },
 ];
 
 export const ClientsTable = () => {
 
+    const [clients, setClients] = useState<Client[]>([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [open, setOpen] = useState(false);
+    const [clientToDelete, setClientToDelete] = useState<number | null>(null);
+
+
+    useEffect(() => {
+        const fetchClients = async () => {
+            try {
+                const response = await fetch('/api/clients');
+                const data = await response.json();
+                setClients(data);
+            } catch (error) {
+                console.error('Error al obtener los clientes:', error);
+            }
+        };
+
+        fetchClients();
+    }, []);
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -85,13 +79,54 @@ export const ClientsTable = () => {
         setPage(0);
     };
 
+    const handleEdit = (id: number) => {
+        console.log(`Editar cliente con ID: ${id}`);
+        // Aquí iría la lógica para editar el cliente
+    };
+
+    const handleDelete = async () => {
+        if (clientToDelete !== null) {
+            try {
+                const response = await fetch(`/api/clients/${clientToDelete}`, {
+                    method: 'DELETE',
+                });
+
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el cliente');
+                }
+
+                // Actualiza la lista de clientes eliminando el cliente del estado
+                setClients((prev) => prev.filter((client) => client.id !== clientToDelete));
+                console.log(`Cliente con ID: ${clientToDelete} eliminado.`);
+            } catch (error) {
+                console.error('Error al eliminar el cliente:', error);
+            } finally {
+                handleCloseModal();
+            }
+        }
+    };
+
+    const handleOpenModal = (id: number) => {
+        setClientToDelete(id);
+        setOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpen(false);
+        setClientToDelete(null);
+    };
+
+
     return (
-
-        <Box sx={{
-            width: '100%', overflow: 'hidden', boxShadow: 2,
-            px: '1rem', borderRadius: '1rem'
-        }}>
-
+        <Box
+            sx={{
+                width: '100%',
+                overflow: 'hidden',
+                boxShadow: 2,
+                px: '1rem',
+                borderRadius: '1rem',
+            }}
+        >
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
@@ -108,36 +143,78 @@ export const ClientsTable = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows
+                        {clients
                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map((row) => {
-                                return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                        {columns.map((column) => {
-                                            const value = row[column.id];
+                            .map((client) => (
+                                <TableRow hover role="checkbox" tabIndex={-1} key={client.id}>
+                                    {columns.map((column) => {
+                                        if (column.id === 'actions') {
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
-                                                    {column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            gap: 1, // Espacio entre los botones
+                                                        }}
+                                                    >
+                                                        <IconButton
+                                                            color="primary"
+                                                            onClick={() => handleEdit(client.id)}
+                                                        >
+                                                            <Edit />
+                                                        </IconButton>
+                                                        <IconButton
+                                                            color="error"
+                                                            onClick={() => handleOpenModal(client.id)}
+                                                        >
+                                                            <Delete />
+                                                        </IconButton>
+                                                    </Box>
                                                 </TableCell>
                                             );
-                                        })}
-                                    </TableRow>
-                                );
-                            })}
+                                        }
+
+                                        const value = client[column.id as keyof Client];
+                                        return (
+                                            <TableCell key={column.id} align={column.align}>
+                                                {value}
+                                            </TableCell>
+                                        );
+                                    })}
+                                </TableRow>
+                            ))}
                     </TableBody>
                 </Table>
             </TableContainer>
             <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
                 component="div"
-                count={rows.length}
+                count={clients.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
             />
+
+
+            <Dialog open={open} onClose={handleCloseModal}>
+                <DialogTitle>Confirmar Eliminación</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        ¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModal} color="primary">
+                        Cancelar
+                    </Button>
+                    <Button onClick={handleDelete} color="warning" autoFocus>
+                        Eliminar
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </Box>
-    )
-}
+    );
+};

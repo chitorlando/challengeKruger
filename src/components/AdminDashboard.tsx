@@ -21,12 +21,39 @@ export const AdminDashboard = () => {
 
             <Box sx={{
                 display: 'flex',
-                mt: '1rem',
-                justifyContent: 'space-evenly',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                gap: '2rem',
+                mt: '2rem',
+                px: '1rem',
             }}>
 
-                <Box> <Typography sx={{ my: '2rem' }} textAlign='center'> Lista de Horarios</Typography> <ClientsTable /> </Box>
-                <Box> <Typography sx={{ my: '2rem' }} textAlign='center'> Lista de Clientes</Typography> <ClientsTable /> </Box>
+                <Box
+                    sx={{
+                        flex: '1 1 55%',
+                        minWidth: '300px',
+                        maxWidth: '40vw',
+                    }}
+                >
+                    <Typography sx={{ my: '2rem' }} textAlign="center">
+                        Lista de Horarios
+                    </Typography>
+                    <ClientsTable />
+                </Box>
+
+                {/* Tabla de clientes */}
+                <Box
+                    sx={{
+                        flex: '1 1 55%',
+                        minWidth: '300px',
+                        maxWidth: '40vw',
+                    }}
+                >
+                    <Typography sx={{ my: '2rem' }} textAlign="center">
+                        Lista de Clientes
+                    </Typography>
+                    <ClientsTable />
+                </Box>
 
             </Box>
 

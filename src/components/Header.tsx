@@ -1,6 +1,6 @@
 'use client'
 import { Box, Button, CardMedia, Link, Typography } from "@mui/material"
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import { useEffect, useState } from "react"
 
@@ -24,6 +24,10 @@ export const Header = () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, []);
+
+    const handleSignOut = async () => {
+        await signOut();
+    };
 
     return (
         <Box
@@ -71,6 +75,7 @@ export const Header = () => {
                         px: '.5rem'
                     }}
                 >
+                    
                     <Link href={'/'}>
                         <CardMedia
                             component='img'
@@ -86,7 +91,9 @@ export const Header = () => {
                         {title}
                     </Typography>
 
-                    <Button color="warning">
+                    <Button color="warning"
+                        onClick={handleSignOut}
+                    >
                         Cerrar Sesión
                     </Button>
 

@@ -64,7 +64,8 @@ export const RegisterClient = () => {
         <Box sx={{
             bgcolor: 'whitesmoke',
             borderRadius: '1rem',
-            p: '1rem'
+            p: '1rem',
+            mb: '2rem'
         }}>
             <Box
                 component='form'

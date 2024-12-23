@@ -16,11 +16,11 @@ export default function AdminLayout({
     const router = useRouter();
 
     useEffect(() => {
-        if (status === 'loading') return; // Esperar la sesión
+        if (status === 'loading') return; 
         if (!session || session.user.role !== 'ADMINISTRADOR') {
-            router.push('/auth/login'); // Redirigir si no es administrador
+            router.push('/auth/login'); 
         }
-    }, [session, status]);
+    }, [session, status, router]);
 
     if (status === 'loading' || !session) return <VerifyAccess />;
 
