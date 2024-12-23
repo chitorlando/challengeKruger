@@ -8,7 +8,7 @@ export const Header = () => {
 
     const name = useSession().data?.user?.name;
 
-    const title = `Bienvenido ${name}`;
+    const title = `Bienvenido/a ${name}`;
 
     const [scroll, setScroll] = useState(false);
 
@@ -75,7 +75,7 @@ export const Header = () => {
                         px: '.5rem'
                     }}
                 >
-                    
+
                     <Link href={'/'}>
                         <CardMedia
                             component='img'

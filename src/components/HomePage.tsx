@@ -28,7 +28,7 @@ export const HomePage = () => {
 
             <Box sx={{
                 my: '2rem', display: 'flex', alignItems: 'center', bgcolor: 'whitesmoke',
-                boxShadow: 2, borderRadius: '2rem',
+                boxShadow: 1, borderRadius: '2rem',
                 flexDirection: 'row',
                 p: '1rem'
             }}>
@@ -63,10 +63,10 @@ export const HomePage = () => {
                         bgcolor: '#fd5c04', borderRadius: '1rem',
                         display: 'flex', justifyContent: 'center',
                         alignItems: 'center',
-                        boxShadow: 4
+                        boxShadow: 1
                     }}>
                     <Typography sx={{ color: 'whitesmoke' }} >
-                        Ingresa
+                        INGRESA
                     </Typography>
                 </CardActionArea>
             </Box>

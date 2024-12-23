@@ -1,5 +1,5 @@
 'use client'
-import { Alert, Box, Button, Grid2, InputLabel, TextField } from '@mui/material'
+import { Alert, Box, Button, CircularProgress, Grid2, InputLabel, TextField } from '@mui/material'
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -135,7 +135,11 @@ export const RegisterOrUpdateClient = () => {
     });
 
     if (isLoading) {
-        return <div>Cargando datos...</div>;
+        return <CircularProgress sx={{
+            position: 'fixed',
+            top: '50%',
+            right: '50%',
+        }} />;
     }
 
     return (
@@ -152,7 +156,7 @@ export const RegisterOrUpdateClient = () => {
 
                 <Grid2 container spacing={2}>
 
-                    {/* Nombres */}
+                    {/* Nombre */}
                     <Grid2 size={6} >
 
                         <TextField
@@ -162,12 +166,17 @@ export const RegisterOrUpdateClient = () => {
                             variant="outlined"
                             fullWidth
                             required
-                            {...register('nombre', { required: true })}
+                            {...register('nombre', {
+                                required: 'El nombre es obligatorio.',
+                                validate: value => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value) || 'El nombre no puede contener números ni caracteres especiales.',
+                            })}
+                            error={!!errors.nombre}
+                            helperText={errors.nombre?.message?.toString()}
                         />
 
                     </Grid2>
 
-                    {/* Apellidos */}
+                    {/* Apellido */}
                     <Grid2 size={6} >
                         <TextField
                             label="Apellido"
@@ -176,8 +185,14 @@ export const RegisterOrUpdateClient = () => {
                             variant="outlined"
                             fullWidth
                             required
-                            {...register('apellido', { required: true })}
+                            {...register('apellido', {
+                                required: 'El apellido es obligatorio.',
+                                validate: value => /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(value) || 'El apellido no puede contener números ni caracteres especiales.',
+                            })}
+                            error={!!errors.apellido}
+                            helperText={errors.apellido?.message?.toString()}
                         />
+
                     </Grid2>
 
                     {/* Email */}

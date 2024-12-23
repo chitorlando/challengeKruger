@@ -32,7 +32,11 @@ const ClientDashboardPage = () => {
     }, []);
 
     if (loading) {
-        return <CircularProgress />;
+        return <CircularProgress sx={{
+            position: 'fixed',
+            top: '50%',
+            right: '50%',
+        }} />;
     }
 
     if (errorMessage) {

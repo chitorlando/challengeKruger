@@ -4,11 +4,15 @@ import { Alert, Box, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import ReadOnlyMapPoligonComponent from './ReadOnlyMapPoligonComponent'
 import { LatLngTuple } from 'leaflet'
+import { ScheduleTable } from './ScheduleTable'
+import { useSession } from 'next-auth/react'
 
 export const ClientDashboard = ({ userCoordinates }: { userCoordinates: string }) => {
 
     const [sector, setSector] = useState<null | { nombreSector: string; horaInicio: string; horaFin: string; poligono: string }>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+    const name = useSession().data?.user?.name;
 
     useEffect(() => {
         const fetchSector = async () => {
@@ -24,6 +28,7 @@ export const ClientDashboard = ({ userCoordinates }: { userCoordinates: string }
                 });
 
                 if (!response.ok) {
+
                     setErrorMessage('No hay cortes programados para su sector.');
                     return;
                 }
@@ -38,14 +43,6 @@ export const ClientDashboard = ({ userCoordinates }: { userCoordinates: string }
 
         fetchSector();
     }, [userCoordinates]);
-
-    if (errorMessage) {
-        return <Alert sx={{ m: '5rem' }} severity="warning">{errorMessage}</Alert>;
-    }
-
-    if (!sector) {
-        return <Typography>Cargando...</Typography>;
-    }
 
     return (
         <Box sx={{
@@ -64,25 +61,29 @@ export const ClientDashboard = ({ userCoordinates }: { userCoordinates: string }
                 px: '1rem',
             }}>
 
-                <Typography variant="h6">Corte Programado para su Sector</Typography>
-
-                {sector && (
+                {sector ? (
                     <Box>
+                        <Typography variant="h6">{`${name} el corte programado para su Sector:`}</Typography>
                         <Typography>Sector: {sector?.nombreSector}</Typography>
                         <Typography>Hora de Inicio: {sector?.horaInicio}</Typography>
                         <Typography>Hora de Fin: {sector?.horaFin}</Typography>
+                        <Box sx={{
+                            width: 'auto', heigh: 'auto', borderRadius: '2rem',
+                            boxShadow: 2, overflow: 'hidden'
+                        }}>
+                            <ReadOnlyMapPoligonComponent
+                                polygons={[sector.poligono]} // El polígono del sector
+                                userCoordinates={userCoordinates.split(',').map(Number) as LatLngTuple} // Coordenadas del usuario
+                            />
+                        </Box>
                     </Box>
+                ) : (
+                    <>
+                        <Alert severity="warning">{errorMessage}</Alert>
+                        <Typography variant="h6">{`${name} te mostramos los horarios disponibles hasta ahora:`}</Typography>
+                        <ScheduleTable />
+                    </>
                 )}
-
-                <Box sx={{
-                    width: 'auto', heigh: 'auto', borderRadius: '2rem',
-                    boxShadow: 2, overflow: 'hidden'
-                }}>
-                    <ReadOnlyMapPoligonComponent
-                        polygons={[sector.poligono]} // El polígono del sector
-                        userCoordinates={userCoordinates.split(',').map(Number) as LatLngTuple} // Coordenadas del usuario
-                    />
-                </Box>
 
             </Box>
 
