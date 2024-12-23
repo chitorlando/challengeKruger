@@ -49,7 +49,6 @@ const MapPoligonComponent: React.FC<MapPoligonComponentProps> = ({ setCoordinate
             setCoordinates(null);
         }
     }, [markers, setCoordinates]);
-    
 
 
     // Limpiar los marcadores si se activa `clearMarkers`

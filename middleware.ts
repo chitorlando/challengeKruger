@@ -25,12 +25,12 @@ export async function middleware(req: NextRequest) {
     }
 }
 
-// export const config = {
-//     matcher: ['/admin/:path*', '/cliente/:path*'],
-// };
-
 export const config = {
-    matcher: ['/:path*'], // Aplica a todas las rutas
-    runtime: 'nodejs', // Temporalmente usa Node.js para debug
+    matcher: ['/admin/:path*', '/cliente/:path*'],
 };
+
+// export const config = {
+//     matcher: ['/:path*'], // Aplica a todas las rutas
+//     runtime: 'nodejs', // Temporalmente usa Node.js para debug
+// };
 

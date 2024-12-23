@@ -30,8 +30,6 @@ const authOptions: NextAuthOptions = {
                 const matchPass = await bcrypt.compare(credentials.password, userFound?.password)
                 if(!matchPass) throw new Error('Contraseña incorrecta');
 
-                console.log(userFound);
-
                 return {
                     id: userFound.id.toString(),
                     name: userFound.nombre,
@@ -47,6 +45,7 @@ const authOptions: NextAuthOptions = {
             if (token && session.user) {
                 session.user = {
                     ...session.user,
+                    id: token.id || null,
                     role: token.role || null
                 };
             }
@@ -55,6 +54,7 @@ const authOptions: NextAuthOptions = {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         async jwt({ token, user }: { token: JWT, user?: any }) {
             if (user) {
+                token.id = user.id; 
                 token.role = user.role || null; // Incluye valores por defecto si es necesario
             }
             return token;

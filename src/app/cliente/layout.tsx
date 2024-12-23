@@ -1,4 +1,5 @@
 'use client'
+import { Header } from '@/components/Header';
 import { VerifyAccess } from '@/components/VerifyAccess';
 import { Box } from '@mui/material'
 import { useSession } from 'next-auth/react';
@@ -15,16 +16,17 @@ export default function ClientLayout({
     const router = useRouter();
 
     useEffect(() => {
-        if (status === 'loading') return; // Esperar la sesión
+        if (status === 'loading') return;
         if (!session || session.user.role !== 'CLIENTE') {
-            router.push('/auth/login'); // Redirigir si no es administrador
+            router.push('/auth/login');
         }
-    }, [session, status]);
+    }, [session, status, router]);
 
     if (status === 'loading' || !session) return <VerifyAccess />;
 
     return (
         <Box>
+            <Header />
             {children}
         </Box>
     )
