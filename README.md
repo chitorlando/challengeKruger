@@ -1,5 +1,25 @@
 # Proyecto: **Kanteritas - Registro de Interrupciones de Energía Eléctrica**
 
+## Credenciales:
+
+### Credenciales admin:
+
+Usuario admin: chitorlando
+Contraseña admin: admin123
+
+### Credenciales clientes:
+
+Usuario: antho.perez.925
+Contraseña: fi9cx7vu
+
+Usuario: patricia.andrade.938
+Contraseña: pyizeni9
+
+Usuario: luisito.salazar.932
+Contraseña: 6v08rm6b
+ 
+### Se pueden crear mas usuarios con un correo al que se tenga acceso para obtener las credenciales.
+
 ## Descripción
 
 Este proyecto es una **aplicación web** para gestionar **horarios de interrupción del servicio eléctrico**. Se implementaron dos roles principales: **Administrador** y **Cliente**.
