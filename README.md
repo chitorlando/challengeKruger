@@ -1,29 +1,19 @@
-##Proyecto: Kanteritas - Registro de Interrupciones de Energía Eléctrica
+# Proyecto: **Kanteritas - Registro de Interrupciones de Energía Eléctrica**
 
-Descripción
+## Descripción
 
-Este proyecto es una aplicación web para gestionar horarios de interrupción del servicio eléctrico. Se implementaron dos roles principales: Administrador y Cliente.
+Este proyecto es una **aplicación web** para gestionar **horarios de interrupción del servicio eléctrico**. Se implementaron dos roles principales: **Administrador** y **Cliente**.
 
-Administrador: Puede gestionar clientes y horarios de interrupción.
+- **Administrador**: Puede gestionar clientes y horarios de interrupción.
+- **Cliente**: Puede visualizar horarios y sectores afectados mediante un mapa interactivo.
 
-Cliente: Puede visualizar horarios y sectores afectados mediante un mapa interactivo.
+La solución utiliza NextJS en su totalidad para optimización de tiempo y carga de trabajo debido a las condiciones dadas.
 
-La solución utiliza un stack tecnológico moderno y está diseñada para cumplir con las mejores prácticas.
+## Tecnologías Utilizadas
 
-Tecnologías Utilizadas
-
-Frontend y Backend (Fullstack)
-
-Framework: Next.js
-
-ORM: Prisma
-
-Base de datos: PostgreSQL (implementada en Neon para facilitar la gestión remota)
-
-Mapas: Leaflet o Visgl Map (para visualización de polígonos y coordenadas)
-
-Autenticación: NextAuth
-
-Documentación: Swagger con swagger-jsdoc
-
-Estilos: MUI - css
+- **Framework**: Next.js
+- **ORM**: Prisma
+- **Base de datos**: PostgreSQL (implementada en **Neon** para facilitar la gestión remota)
+- **Mapas**: Leaflet (para visualización de polígonos y coordenadas)
+- **Autenticación**: NextAuth
+- **Estilos**: MUI - css
