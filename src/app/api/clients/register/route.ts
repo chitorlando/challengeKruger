@@ -50,12 +50,12 @@ export async function POST(req: Request) {
     }
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: {params: Promise<{id:string}> } ) {
     const body = await req.json();
     const { email, nombre, apellido, cedula, coordenadas } = body;
 
     try {
-        const clientId = parseInt(params.id);
+        const clientId = parseInt((await params).id);
 
         // Validar si el cliente existe
         const existingClient = await db.cliente.findUnique({

@@ -3,10 +3,10 @@ import db from "@/libs/db";
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: {params: Promise<{id:string}> }
 ) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         // Verificar que el horario existe
         const schedule = await db.horario.findUnique({
@@ -38,10 +38,10 @@ export async function DELETE(
 
 export async function GET(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: {params: Promise<{id:string}> }
 ) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         // Buscar el horario por ID
         const schedule = await db.horario.findUnique({
@@ -68,10 +68,10 @@ export async function GET(
 
 export async function PUT(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: {params: Promise<{id:string}> }
 ) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const body = await req.json();
         const { nombreSector, horaInicio, horaFin, poligono } = body;
 

@@ -19,24 +19,6 @@ La solución utiliza NextJS en su totalidad para optimización de tiempo y carga
 - **Autenticación**: NextAuth
 - **Estilos**: MUI - css
 
-
-## Flujo de navegación
-
-Desde home a Login, 
-en login podemos iniciar sesión, el administrador fué ingresado por bd directa,
-el login redirige según el rol del usuario,
-los clientes son creados, listados, eliminados o editados desde el dashboard del administrador, 
-al momento de ser creados, reciben un correo con su usario y contraseña, los mismos que son 
-creados en este momento, el usuario con el nombre + apellido + 3 últimos dígitos de su cédula, la constraseña con asignación aleatoria alfanumérica.
-
-Los horarios son creados, listados, eliminados o editados desde el dashboard del administrador,
-
-Los clientes al ingresar con sus credenciales pueden ver que, según la latitud y longitud ingresados 
-si este punto está dentro de un polígono de coordenadas ingresados previamente en un Horario, 
-se le muestra la hora de inicio y de fin del corte, a más del mapa mostrando el polígono de su sector y el marcador con su ubicación.
-Si su marcador de ubicación no está dentro de un Horario ingresado, se le indica que no hay horario programado para su sector,
-a más de listar todos los Horarios ingresados hasta el momento.
-
 ### Descripción Técnica del Flujo de la Aplicación
 
 #### **Flujo de Navegación**

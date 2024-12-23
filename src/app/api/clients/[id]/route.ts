@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import db from '@/libs/db'; // Asegúrate de que esta ruta sea la correcta hacia tu cliente de Prisma
+import db from '@/libs/db';
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request,  { params }: {params: Promise<{id:string}> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         // Verifica si el cliente existe antes de eliminar
         const existingClient = await db.cliente.findUnique({
@@ -34,9 +34,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     }
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: {params: Promise<{id:string}> } ) {
     try {
-        const clientId = parseInt(params.id);
+        const clientId = parseInt((await params).id);
 
         // Buscar cliente y usuario relacionado
         const client = await db.cliente.findUnique({
@@ -54,23 +54,20 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
             cedula: client.cedula,
             coordenadas: client.coordenadas,
             nombre: client.usuario.nombre,
-            apellido: client.usuario.apellido,
-            email: client.usuario.email,
-            usuarioId: client.usuarioId,
         });
     } catch (error) {
-        console.error('Error al obtener cliente:', error);
-        return NextResponse.json({ message: 'Error interno del servidor' }, { status: 500 });
+        console.error('Error al obtener el cliente:', error);
+        return NextResponse.json({ error: 'Error al obtener el cliente' }, { status: 500 });
     }
 }
 
 // Editar un cliente por su ID
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: {params: Promise<{id:string}> }) {
     const body = await req.json();
     const { email, nombre, apellido, cedula, coordenadas } = body;
 
     try {
-        const clientId = parseInt(params.id);
+        const clientId = parseInt((await params).id);
 
         // Verificar si el cliente existe y obtener su usuario asociado
         const existingClient = await db.cliente.findUnique({
