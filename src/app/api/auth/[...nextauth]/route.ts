@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import NextAuth from "next-auth"
+import NextAuth, { NextAuthOptions, Session } from "next-auth"
 //nextaAuth con usuario y contraseña
 import CredentialsProvider from "next-auth/providers/credentials"
 
 import db from '@/libs/db'
 import bcrypt from 'bcrypt'
+import { JWT } from "next-auth/jwt";
 
-const authOptions = {
+const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -42,13 +43,17 @@ const authOptions = {
         })
     ],
     callbacks: {
-        async session({ session, token }) {
-            if (token) {
-                session.user.role = token.role || null; // Asegúrate de asignar un valor por defecto
+        async session({ session, token }: { session: Session, token: JWT }) {
+            if (token && session.user) {
+                session.user = {
+                    ...session.user,
+                    role: token.role || null
+                };
             }
             return session;
         },
-        async jwt({ token, user }) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        async jwt({ token, user }: { token: JWT, user?: any }) {
             if (user) {
                 token.role = user.role || null; // Incluye valores por defecto si es necesario
             }

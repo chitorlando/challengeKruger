@@ -1,41 +1,31 @@
 'use client'
-import { Alert, Box, Button, Grid2, TextField } from '@mui/material'
+import { Alert, Box, Button, Grid2, InputLabel, TextField } from '@mui/material'
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import MapComponent from './MapComponent';
+import { sendEmail } from '@/libs/emailService';
 
 export const RegisterClient = () => {
 
-    const { register, handleSubmit } = useForm();
+    const { register, handleSubmit, setValue } = useForm();
 
     const router = useRouter();
+    const [coordinates, setCoordinates] = useState<string | null>(null);
 
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    // const onSubmit = handleSubmit(async (data) => {
-    //     const res = await fetch('/api/clients/register', {
-    //         method: 'POST',
-    //         body: JSON.stringify(data),
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //     const resJSON = await res.json()
-    //     console.log(resJSON);
-    // })
-
     // Función para generar el username
-    const generateUsername = (nombres: string, apellidos: string, cedula: string) => {
-        const namePart = nombres.split(' ')[0].toLowerCase(); // Primer nombre en minúsculas
-        const lastNamePart = apellidos.split(' ')[0].toLowerCase(); // Primer apellido en minúsculas
-        const cedulaPart = cedula.slice(0, 3); // Primeros 3 dígitos de la cédula
+    const generateUsername = (nombre: string, apellido: string, cedula: string) => {
+        const namePart = nombre.split(' ')[0].toLowerCase(); // Primer nombre en minúsculas
+        const lastNamePart = apellido.split(' ')[0].toLowerCase(); // Primer apellido en minúsculas
+        const cedulaPart = cedula.slice(-3); // Tres últimos dígitos de la cédula
         return `${namePart}.${lastNamePart}.${cedulaPart}`;
     };
 
     const onSubmit = handleSubmit(async (data) => {
-
         // Generar automáticamente el nombre de usuario
-        const username = generateUsername(data.nombres, data.apellidos, data.cedula);
+        const username = generateUsername(data.nombre, data.apellido, data.cedula);
 
         // Agregar generación automática de contraseña
         const generatedPassword = Math.random().toString(36).slice(-8); // Genera una contraseña aleatoria
@@ -43,7 +33,8 @@ export const RegisterClient = () => {
         const payload = {
             ...data,
             username,
-            password: generatedPassword, // Añadir la contraseña generada
+            password: generatedPassword,
+            coordenadas: coordinates,
         };
 
         const res = await fetch('/api/clients/register', {
@@ -55,11 +46,15 @@ export const RegisterClient = () => {
         });
 
         const resJSON = await res.json();
-        console.log(resJSON);
 
         if (res.ok) {
-            setErrorMessage(`Cliente registrado con éxito. Contraseña generada: ${generatedPassword}`);
-            router.push('/admin/clients');
+            const emailSent = await sendEmail(data.email, username, generatedPassword);
+            if (emailSent) {
+                setErrorMessage('Usuario creado y correo enviado con éxito');
+            } else {
+                setErrorMessage('Usuario creado, pero no se pudo enviar el correo.');
+            }
+            router.push('/admin/dashboard');
         } else {
             setErrorMessage(`Error al registrar el cliente: ${resJSON.message}`);
         }
@@ -134,8 +129,9 @@ export const RegisterClient = () => {
 
                     {/* Coordenadas */}
                     <Grid2 size={6} >
+                        <InputLabel htmlFor="component-simple">Coordenadas de domicilio</InputLabel>
                         <TextField
-                            label="Coordenadas"
+                            helperText="Haz clic en el mapa para seleccionar las coordenadas"
                             color="warning"
                             placeholder="-0.1841235,-78.4872125"
                             variant="outlined"
@@ -146,34 +142,59 @@ export const RegisterClient = () => {
                         />
                     </Grid2>
 
+                    {/* Mapa */}
+                    <Grid2 size={12} sx={{ boxShadow: 3, borderRadius: '2rem' }} >
+                        <MapComponent setCoordinates={(coords) => {
+                            setCoordinates(coords); // Actualizar estado local
+                            setValue('coordenadas', coords); // Actualizar campo del formulario
+                        }} />
+                    </Grid2>
+
                 </Grid2>
 
-                <Button
-                    variant='contained'
-                    type='submit'
-                    sx={{
-                        bgcolor: '#fd5c04',
-                        my: '2rem'
-                    }}>
-                    Ingresar
-                </Button>
-
-                {errorMessage && (
-                    <Alert
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'space-around'
+                }}>
+                    <Button
+                        variant='contained'
+                        type='submit'
                         sx={{
-                            position: 'fixed',
-                            top: '1rem',
-                            right: '1rem',
-                        }}
-                        severity="warning"
-                        variant="filled"
-                        onClose={() => setErrorMessage(null)}
-                    >
-                        {errorMessage}
-                    </Alert>
-                )}
+                            bgcolor: '#fd5c04',
+                            my: '2rem'
+                        }}>
+                        Insertar
+                    </Button>
+                    <Button
+                        variant='contained'
+                        href='/admin/dashboard'
+                        sx={{
+                            bgcolor: '#fd5c04',
+                            my: '2rem'
+                        }}>
+                        Cancelar
+                    </Button>
+                </Box>
 
-            </Box>
-        </Box>
+                {
+                    errorMessage && (
+                        <Alert
+                            sx={{
+                                position: 'fixed',
+                                top: '1rem',
+                                right: '1rem',
+                                zIndex: 50
+                            }}
+                            severity="warning"
+                            variant="filled"
+                            onClose={() => setErrorMessage(null)}
+                        >
+                            {errorMessage}
+                        </Alert>
+                    )
+                }
+
+            </Box >
+        </Box >
     )
 }
