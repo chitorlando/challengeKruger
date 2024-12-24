@@ -236,7 +236,7 @@ export const RegisterOrUpdateClient = () => {
                     </Grid2>
 
                     {/* Coordenadas */}
-                    <Grid2 size={6} >
+                    <Grid2 size={12} >
                         <InputLabel htmlFor="component-simple">Coordenadas de domicilio</InputLabel>
                         <TextField
                             helperText="Haz clic en el mapa para seleccionar las coordenadas de tu casa"

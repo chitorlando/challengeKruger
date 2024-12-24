@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Grid2, TextField, InputLabel, Button, Alert } from '@mui/material';
+import { Box, Grid2, TextField, InputLabel, Button, Alert, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import MapPoligonComponent from './MapPoligonComponent';
@@ -19,38 +19,6 @@ export const RegisterOrUpdateSchedule = () => {
     const searchParams = useSearchParams();
     const scheduleId = searchParams.get('id');
     const [isLoading, setIsLoading] = useState(false);
-
-    // const onSubmit = handleSubmit(async (data) => {
-
-    //     if (!poligono) {
-    //         setErrorMessage('Debe delimitar el sector con al menos 3 marcadores en el mapa.');
-    //         return;
-    //     }
-
-    //     try {
-    //         const response = await fetch('/api/schedules/register', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(data),
-    //         });
-
-    //         const result = await response.json();
-
-    //         if (!response.ok) {
-    //             setErrorMessage(result.message || 'Error al registrar el horario.');
-    //             return;
-    //         }
-
-    //         setErrorMessage('Horario registrado exitosamente.');
-    //         // Redirigir o limpiar el formulario según lo necesario
-    //         router.push('/admin/dashboard');
-    //     } catch (error) {
-    //         console.error('Error al enviar los datos:', error);
-    //         setErrorMessage('Error interno del servidor. Inténtelo nuevamente más tarde.');
-    //     }
-    // });
 
     const onSubmit = handleSubmit(async (data) => {
         if (!poligono) {
@@ -105,7 +73,11 @@ export const RegisterOrUpdateSchedule = () => {
     }, [scheduleId, setValue]);
 
     if (isLoading) {
-        return <div>Cargando datos...</div>;
+        return <CircularProgress sx={{
+            position: 'fixed',
+            top: '50%',
+            right: '50%',
+        }} />;
     }
 
     return (
@@ -223,33 +195,38 @@ export const RegisterOrUpdateSchedule = () => {
 
                 <Box sx={{
                     display: 'flex',
-                    justifyContent: 'space-around'
+                    justifyContent: 'space-around',
+                    flexDirection: { xs: 'column', sm: 'row' },
+                    my: '2rem'
                 }}>
 
                     <Button
+                        size='small'
                         variant='contained'
                         type='submit'
                         sx={{
                             bgcolor: '#fd5c04',
-                            my: '2rem'
+                            my: '.5rem'
                         }}>
                         {scheduleId ? 'Actualizar' : 'Insertar'}
                     </Button>
 
                     <Button
+                        size='small'
                         variant="contained"
-                        sx={{ bgcolor: '#fd5c04', my: '2rem' }}
+                        sx={{ bgcolor: '#fd5c04', my: '.5rem' }}
                         onClick={() => setClearMarkers(true)}
                     >
                         Limpiar Marcadores
                     </Button>
 
                     <Button
+                        size='small'
                         variant='contained'
                         href='/admin/dashboard'
                         sx={{
                             bgcolor: '#fd5c04',
-                            my: '2rem'
+                            my: '.5rem'
                         }}>
                         Cancelar
                     </Button>

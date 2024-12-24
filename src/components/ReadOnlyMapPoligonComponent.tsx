@@ -33,7 +33,7 @@ const ReadOnlyMapPoligonComponent: React.FC<ReadOnlyMapPoligonComponentProps> = 
         <MapContainer
             center={userCoordinates}
             zoom={13}
-            style={{ height: '50vh', width: '50vw' }}
+            style={{ height: '50vh', width: '100%' }}
         >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

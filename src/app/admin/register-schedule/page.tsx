@@ -6,7 +6,10 @@ const RegisterSchedulePage = () => {
     return (
         <Box sx={{
             mt: '4rem',
-            px: '15rem'
+            px: {
+                xs: '1rem',
+                md: '12rem'
+            }
         }}>
             <RegisterOrUpdateSchedule />
         </Box>
