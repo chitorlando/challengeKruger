@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import db from '@/libs/db'
 import bcrypt from 'bcrypt'
 
+//funcion para registrar un cliente
 export async function POST(req: Request) {
 
     const body = await req.json();
@@ -50,6 +51,7 @@ export async function POST(req: Request) {
     }
 }
 
+//actualizar un cliente
 export async function PUT(req: Request, { params }: {params: Promise<{id:string}> } ) {
     const body = await req.json();
     const { email, nombre, apellido, cedula, coordenadas } = body;

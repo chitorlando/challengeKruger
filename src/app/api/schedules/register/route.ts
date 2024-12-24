@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from '@/libs/db';
 
+//registar un nuevo horario
 export async function POST(req: Request) {
     try {
         const body = await req.json();

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import db from '@/libs/db';
 
+// eliminacion de usuario cliente por su ID
 export async function DELETE(request: Request,  { params }: {params: Promise<{id:string}> }) {
     try {
         const { id } = await params;
@@ -34,6 +35,7 @@ export async function DELETE(request: Request,  { params }: {params: Promise<{id
     }
 }
 
+// obtener cliente por su ID
 export async function GET(request: Request, { params }: {params: Promise<{id:string}> } ) {
     try {
         const clientId = parseInt((await params).id);

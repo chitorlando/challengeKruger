@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/libs/db";
 
+//busca un punto en un poligono
 function isPointInPolygon(point: [number, number], polygon: string): boolean {
     const coords = polygon
         .slice(1, -1) 
@@ -19,6 +20,7 @@ function isPointInPolygon(point: [number, number], polygon: string): boolean {
     return inside;
 }
 
+//funcion para hacer match al marcador con el poligono
 export async function POST(req: Request) {
     try {
         console.log(req);
@@ -35,7 +37,8 @@ export async function POST(req: Request) {
         const [lat, lng] = coordinates;
 
         const schedules = await db.horario.findMany();
-
+        
+        //busca el sector en el que se encuentra el marcador
         for (const schedule of schedules) {
             if (isPointInPolygon([lat, lng], schedule.poligono)) {
                 return NextResponse.json(schedule);

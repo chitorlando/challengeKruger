@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/libs/db";
 
+//obtener los horarios
 export async function GET() {
     try {
         const schedules = await db.horario.findMany();

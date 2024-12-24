@@ -19,7 +19,7 @@ import {
 import { Edit, Delete } from '@mui/icons-material';
 
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface Schedule {
     id: number;
@@ -45,12 +45,17 @@ const columns: readonly Column[] = [
 ];
 
 export const ScheduleTable = () => {
+
+
     const [schedules, setSchedules] = useState<Schedule[]>([]);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [open, setOpen] = useState(false);
     const [scheduleToDelete, setScheduleToDelete] = useState<number | null>(null);
     const router = useRouter();
+    const pathname = usePathname();
+
+    const isAdminRoute = pathname.startsWith('/admin');
 
     // Obtener los horarios desde el backend
     useEffect(() => {
@@ -125,15 +130,21 @@ export const ScheduleTable = () => {
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
                         <TableRow>
-                            {columns.map((column) => (
-                                <TableCell
-                                    key={column.id}
-                                    align={column.align}
-                                    style={{ minWidth: column.minWidth }}
-                                >
-                                    {column.label}
-                                </TableCell>
-                            ))}
+                            {columns.map((column) => {
+                                // No renderizar la columna de acciones si no es ruta de admin
+                                if (column.id === 'actions' && !isAdminRoute) {
+                                    return null;
+                                }
+                                return (
+                                    <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        style={{ minWidth: column.minWidth }}
+                                    >
+                                        {column.label}
+                                    </TableCell>
+                                );
+                            })}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -142,6 +153,9 @@ export const ScheduleTable = () => {
                             .map((schedule) => (
                                 <TableRow hover role="checkbox" tabIndex={-1} key={schedule.id}>
                                     {columns.map((column) => {
+                                        if (column.id === 'actions' && !isAdminRoute) {
+                                            return null; // No renderizar las acciones si no es ruta de admin
+                                        }
                                         if (column.id === 'actions') {
                                             return (
                                                 <TableCell key={column.id} align={column.align}>

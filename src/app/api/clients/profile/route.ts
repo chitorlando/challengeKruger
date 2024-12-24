@@ -3,6 +3,7 @@ import db from "@/libs/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/libs/auth";
 
+//obtener el perfil del cliente para mostrar las coordenadas
 export async function GET() {
     try {
         const session = await getServerSession(authOptions);

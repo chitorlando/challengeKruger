@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/libs/db";
 
+//eliminar un horario por ID
 export async function DELETE(
     req: Request,
     { params }: {params: Promise<{id:string}> }
@@ -35,7 +36,7 @@ export async function DELETE(
     }
 }
 
-
+//obtener un horario
 export async function GET(
     req: Request,
     { params }: {params: Promise<{id:string}> }
@@ -65,7 +66,7 @@ export async function GET(
     }
 }
 
-
+//actualizar un horario por ID
 export async function PUT(
     req: Request,
     { params }: {params: Promise<{id:string}> }

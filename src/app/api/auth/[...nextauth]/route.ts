@@ -7,6 +7,7 @@ import db from '@/libs/db'
 import bcrypt from 'bcrypt'
 import { JWT } from "next-auth/jwt";
 
+// Configuración de NextAuth
 const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -16,7 +17,7 @@ const authOptions: NextAuthOptions = {
                 password: { label: "Contraseña", type: "password" }
             },
             async authorize(credentials: Record<"username" | "password", string > | undefined,  req) {
-
+                // UserFound es el usuario encontrado en la base de datos 
                 const userFound = await db.usuario.findFirst({
                     where:{
                         usuario: credentials?.username
@@ -40,13 +41,14 @@ const authOptions: NextAuthOptions = {
             }
         })
     ],
+    // Configuración de la base de datos
     callbacks: {
         async session({ session, token }: { session: Session, token: JWT }) {
             if (token && session.user) {
                 session.user = {
                     ...session.user,
-                    id: token.id || null,
-                    role: token.role || null
+                    id: token.id,
+                    role: token.role
                 };
             }
             return session;
@@ -55,7 +57,7 @@ const authOptions: NextAuthOptions = {
         async jwt({ token, user }: { token: JWT, user?: any }) {
             if (user) {
                 token.id = user.id; 
-                token.role = user.role || null; // Incluye valores por defecto si es necesario
+                token.role = user.role; // Incluye valores por defecto
             }
             return token;
         }

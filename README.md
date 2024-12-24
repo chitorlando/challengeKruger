@@ -127,6 +127,25 @@ La solución utiliza NextJS en su totalidad para optimización de tiempo y carga
    - **Consultas Geoespaciales**:
      - Validación de si un punto (coordenadas del cliente) está dentro de un polígono.
 
+    En este proyecto se decidió no implementar Swagger OpenAPI para la documentación del backend por los siguientes motivos:
+
+    Naturaleza del Backend:
+
+    El backend está diseñado como un servicio interno para soportar la funcionalidad de la aplicación Next.js. No se planea exponer los endpoints a servicios externos ni integrarlos con terceros.
+    Simplicidad de la API:
+
+    Los endpoints del backend son relativamente sencillos y están bien organizados en el **sistema de archivos** de Next.js, lo que facilita su comprensión y mantenimiento sin necesidad de una capa adicional de documentación.
+    Ecosistema Controlado:
+
+    Tanto el frontend como el backend forman parte del mismo proyecto, y los desarrolladores tienen acceso completo al código fuente. Esto elimina la necesidad de herramientas externas como Swagger para explorar la API.
+    Priorización de Recursos:
+
+    Se priorizó la implementación de funcionalidades principales sobre la generación de documentación formal. El tiempo y los recursos se dedicaron a mejorar la experiencia del usuario y las características críticas del sistema.
+    
+    Alternativas de Documentación:
+
+    En lugar de Swagger, se optó por utilizar comentarios descriptivos en el código fuente y este documento de soporte, lo cual es suficiente dado el alcance del proyecto.
+
 3. **Frontend**:
      - **Tecnologías**:
      - `Next.js` .
@@ -162,4 +181,58 @@ La solución utiliza NextJS en su totalidad para optimización de tiempo y carga
 
 5. **Escalabilidad**:
    - Arquitectura modular que facilita la extensión de funcionalidades.
+
+### **Actualización de Deploy** 🚀
+
+#### **Infraestructura**
+
+1. **Servidor**:
+   - **Proveedor:** DigitalOcean.
+   - **Instancia:** Droplet con SO Ubuntu.
+   - **Proxy Inverso:** Configuración de Nginx como proxy inverso para enrutar el tráfico hacia la aplicación.
+   - **DNS Personalizado:** Configuración del dominio personalizado **chitorlando.com** para acceder a la aplicación.
+
+2. **Software Instalado en el Servidor**:
+   - **Node.js:** Entorno de ejecución para JavaScript necesario para ejecutar la aplicación.
+   - **Yarn:** Gestor de paquetes para manejar dependencias y scripts.
+   - **PM2:** Administrador de procesos para ejecutar la aplicación en modo de producción y asegurar reinicios automáticos en caso de fallos.
+   - **Nginx:** Proxy inverso utilizado para manejar las solicitudes HTTP y servir archivos estáticos.
+   - **Certbot (Let's Encrypt):** Herramienta para generar y renovar automáticamente certificados SSL/TLS, proporcionando seguridad HTTPS.
+
+---
+
+#### **Gestión de Cambios**
+
+1. **Repositorio de Código Fuente**:
+   - **Plataforma:** GitHub.
+   - **Acceso:** Configuración de autenticación mediante claves SSH para garantizar una conexión segura al repositorio remoto.
+
+2. **Estrategia de Despliegue**:
+   - Sin integración con **GitHub Actions**, ya que no se espera un flujo constante de cambios.
+   - Los cambios se implementan manualmente mediante **pull** desde el repositorio remoto en el servidor de producción.
+
+---
+
+#### **Seguridad**
+
+1. **Certificados SSL**:
+   - **Proveedor:** Let's Encrypt.
+   - **Herramienta de Gestión:** Certbot.
+   - **Implementación:** 
+     - Generación inicial de certificados para el dominio.
+     - Configuración de renovación automática para garantizar la disponibilidad continua de HTTPS.
+
+---
+
+#### **Consideraciones Adicionales**
+
+1. **Escalabilidad**:
+   - La configuración actual permite migrar fácilmente a instancias adicionales o servicios de balanceo de carga si la demanda aumenta.
+
+2. **Monitoreo y Logs**:
+   - PM2 se utiliza para registrar errores y métricas de rendimiento, facilitando el monitoreo y la solución de problemas en producción.
+
+3. **Documentación y Soporte**:
+   - El despliegue sigue buenas prácticas para entornos de producción, con pasos claros para mantenimiento y actualizaciones futuras.
+
  

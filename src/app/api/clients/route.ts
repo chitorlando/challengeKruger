@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import db from '@/libs/db'
 
+//obtener todos los clientes
 export async function GET() {
     try {
         // Obtén los clientes con sus usuarios relacionados
