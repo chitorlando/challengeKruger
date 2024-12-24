@@ -46,19 +46,6 @@ const LoginPage = () => {
         event.preventDefault();
     };
 
-    //! aqui copiar el handle para nuevos usuarios
-    // const onSubmit = handleSubmit(async (data) => {
-    //     const res = await fetch('/api/clients/register', {
-    //         method: 'POST',
-    //         body: JSON.stringify(data),
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //     const resJSON = await res.json()
-    //     console.log(resJSON);
-    // })
-
     const onSubmit = handleSubmit(async (data) => {
         const res = await signIn('credentials', {
             redirect: false,
@@ -100,14 +87,15 @@ const LoginPage = () => {
                 backgroundPosition: 'center',
                 borderRadius: '0 7rem 1rem 0',
                 boxShadow: 5,
-                position: 'relative'
+                position: 'relative',
+                display: { xs: 'none', sm: 'block' }
             }}>
                 <CardMedia
                     component='img'
                     image='https://muchomejorecuador.org.ec/wp-content/uploads/2024/06/438238735_814963247326837_1522988942741759053_n.jpg'
                     sx={{
                         borderRadius: '0 1rem 1rem 0',
-                        width: '12rem', height: 'auto',
+                        width: '10rem', height: 'auto',
                         position: 'absolute',
                         bottom: 0,
                         right: 0
@@ -119,7 +107,7 @@ const LoginPage = () => {
                 width: '100%', height: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
             }}>
 
                 <Box sx={{
@@ -140,11 +128,30 @@ const LoginPage = () => {
                         }}
                     >
 
-                        <TextField id="user" required label="Usuario" color='warning' placeholder='john_doe' variant="outlined" sx={{ my: '1rem' }}
+                        <TextField
+                            id="user"
+                            required
+                            label="Usuario"
+                            color="warning"
+                            placeholder="john_doe"
+                            variant="outlined"
+                            sx={{ my: '1rem' }}
                             {...register('username', {
-                                required: 'true'
+                                required: 'Este campo es obligatorio',
+                                validate: (value) => {
+                                    if (value.trim() !== value) {
+                                        return 'El usuario no debe contener espacios al inicio o al final';
+                                    }
+                                    if (/\s/.test(value)) {
+                                        return 'El usuario no debe contener espacios';
+                                    }
+                                    return true;
+                                },
+                                setValueAs: (value) => value?.toLowerCase().trim(),
                             })}
+
                         />
+
 
                         <TextField id="passwd" required
                             type={showPassword ? 'text' : 'password'}

@@ -47,7 +47,6 @@ export const ClientDashboard = ({ userCoordinates }: { userCoordinates: string }
     return (
         <Box sx={{
             mt: '5rem',
-            px: '5rem',
             display: 'flex',
             justifyContent: 'space-around',
         }}>
@@ -56,13 +55,11 @@ export const ClientDashboard = ({ userCoordinates }: { userCoordinates: string }
                 display: 'flex',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                gap: '2rem',
                 mt: '2rem',
-                px: '1rem',
             }}>
 
                 {sector ? (
-                    <Box>
+                    <Box sx={{ width: '100%' }}>
                         <Typography variant="h6">{`${name} el corte programado para su Sector:`}</Typography>
                         <Typography>Sector: {sector?.nombreSector}</Typography>
                         <Typography>Hora de Inicio: {sector?.horaInicio}</Typography>
@@ -78,11 +75,21 @@ export const ClientDashboard = ({ userCoordinates }: { userCoordinates: string }
                         </Box>
                     </Box>
                 ) : (
-                    <>
+                    <Box sx={{ width: '100%' }}>
                         <Alert severity="warning">{errorMessage}</Alert>
                         <Typography variant="h6">{`${name} te mostramos los horarios disponibles hasta ahora:`}</Typography>
-                        <ScheduleTable />
-                    </>
+                        <Box
+                            sx={{
+                                minWidth: '300px',
+                                maxWidth: { xs: '100vw', md: '40vw' },
+                            }}
+                        >
+                            <Typography sx={{ my: '2rem' }} textAlign="center">
+                                Lista de Horarios
+                            </Typography>
+                            <ScheduleTable />
+                        </Box>
+                    </Box>
                 )}
 
             </Box>

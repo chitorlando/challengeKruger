@@ -10,7 +10,7 @@ export const AdminDashboard = () => {
 
             <Box sx={{
                 mt: '5rem',
-                px: '15rem',
+                px: { md: '12rem' },
                 display: 'flex',
                 justifyContent: 'space-around'
             }}>
@@ -24,8 +24,7 @@ export const AdminDashboard = () => {
                 display: 'flex',
                 flexWrap: 'wrap',
                 justifyContent: 'center',
-                gap: '2rem',
-                mt: '2rem',
+                gap: '1rem',
                 px: '1rem',
             }}>
 
@@ -33,7 +32,7 @@ export const AdminDashboard = () => {
                     sx={{
                         flex: '1 1 55%',
                         minWidth: '300px',
-                        maxWidth: '40vw',
+                        maxWidth: { xs: '90vw', md: '40vw' },
                     }}
                 >
                     <Typography sx={{ my: '2rem' }} textAlign="center">
@@ -47,7 +46,7 @@ export const AdminDashboard = () => {
                     sx={{
                         flex: '1 1 55%',
                         minWidth: '300px',
-                        maxWidth: '40vw',
+                        maxWidth: { xs: '90vw', md: '40vw' },
                     }}
                 >
                     <Typography sx={{ my: '2rem' }} textAlign="center">
